@@ -7,6 +7,7 @@ public abstract class Unit
     #region Properties
 
     public string Name { get; set; }
+    public Texture2D Icon { get; set; }
     public int MaxHealth { get; set; }
     public int MaxUbi { get; set; }
     public int CurrentUbi { get; set; }

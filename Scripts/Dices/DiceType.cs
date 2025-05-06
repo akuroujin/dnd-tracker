@@ -1,5 +1,6 @@
 public enum DiceType
 {
+    FLAT = 0,
     D4 = 4,
     D6 = 6,
     D8 = 8,
