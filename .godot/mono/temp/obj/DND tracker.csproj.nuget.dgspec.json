@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/akuro/Documents/Coding/Godot/dnd-tracker/DND tracker.csproj": {}
+  },
+  "projects": {
+    "/home/akuro/Documents/Coding/Godot/dnd-tracker/DND tracker.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/akuro/Documents/Coding/Godot/dnd-tracker/DND tracker.csproj",
+        "projectName": "DND tracker",
+        "projectPath": "/home/akuro/Documents/Coding/Godot/dnd-tracker/DND tracker.csproj",
+        "packagesPath": "/home/akuro/.nuget/packages/",
+        "outputPath": "/home/akuro/Documents/Coding/Godot/dnd-tracker/.godot/mono/temp/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/akuro/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Godot.NET.Sdk": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "Godot.SourceGenerators": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "GodotSharp": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "GodotSharpEditor": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.15, 8.0.15]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.105/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
