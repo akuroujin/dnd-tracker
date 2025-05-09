@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract class Unit
+public abstract class Unit : IObservable<Unit>, IObserver<Unit>
 {
     #region Properties
 
@@ -81,4 +81,29 @@ public abstract class Unit
         if (roll == 20)
             enemy.TakeAttack(attack, true);
     }
+
+    #region Observer
+    public IDisposable Subscribe(IObserver<Unit> observer)
+    {
+        //TODO: add unit to observer, apply effects
+        throw new NotImplementedException();
+    }
+
+    public void OnCompleted()
+    {
+        //TODO: final application of effects and remove
+        throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnNext(Unit value)
+    {
+        //TODO: apply effect, remove duration
+        throw new NotImplementedException();
+    }
+    #endregion
 }

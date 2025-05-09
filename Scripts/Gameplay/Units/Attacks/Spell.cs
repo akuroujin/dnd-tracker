@@ -21,6 +21,7 @@ public class Spell : Attack
     public bool IsHealing { get; set; }
     public LimitType LimitType { get; set; }
     public int LimitAmount { get; set; }
+    public int RefillAmount { get; set; }
 
     public override int GetDamage()
     {

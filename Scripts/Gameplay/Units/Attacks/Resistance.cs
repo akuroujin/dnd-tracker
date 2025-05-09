@@ -1,16 +1,16 @@
 public class Resistance
 {
-    public ResistanceType Type;
+    public DamageType Type;
     public bool IsImmunity;
     public int Value;
 
-    public Resistance(ResistanceType type, bool isImmunity, int value)
+    public Resistance(DamageType type, bool isImmunity, int value)
     {
         Type = type;
         IsImmunity = isImmunity;
         Value = value;
     }
-    public int GetResistanceDamage(int damage, ResistanceType type)
+    public int GetResistanceDamage(int damage, DamageType type)
     {
         if (type != Type)
             return damage;
