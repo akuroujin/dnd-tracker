@@ -16,6 +16,7 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     public List<DamageType> Resistances { get; set; }
     public List<Attack> Attacks { get; set; }
     public List<Spell> Spells { get; set; }
+    public List<Item> Inventory { get; set; }
 
     #endregion
 
@@ -25,7 +26,7 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     public int TempHealth { get; set; }
     public List<Element> appliedElements = new List<Element>();
     public Position Position { get; set; }
-    public bool IsDead => CurrentHealth <= 0;
+
 
     #endregion
 
@@ -37,18 +38,46 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     }
     public virtual int GetSaveRoll(StatType statType)
     {
-        return Stats[statType] - 10;
+        return Dice.Roll(DiceType.D20) + Stats[statType] - 10;
+    }
+    private void Heal(int heal)
+    {
+        CurrentHealth += heal;
+        if (CurrentHealth > MaxHealth)
+            CurrentHealth = MaxHealth;
+    }
+    protected virtual void TakeDamage(int damage)
+    {
+        if (damage < 0)
+        {
+            Heal(damage);
+            return;
+        }
+        if (damage > MaxHealth)
+        {
+            Die();
+            return;
+        }
+        if (TempHealth > 0)
+        {
+            TempHealth -= damage;
+            damage = -TempHealth;
+            if (TempHealth >= 0)
+                return;
+        }
+        CurrentHealth -= damage;
+
     }
 
-    public void TakeDamage(int damage, string reason)
+    public void TakeOtherDamage(int damage, string reason)
     {
-
+        TakeDamage(damage);
     }
 
     public void TakeAttack(Attack attack, bool isCritical = false)
     {
         CurrentHealth -= attack.GetDamage();
-        if (!isCritical)
+        if (isCritical)
             return;
         Dice.Roll(DiceType.D20, RollType.Disadvantage);
     }
@@ -65,11 +94,17 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
         if (roll == 20)
             enemy.TakeAttack(attack, true);
     }
-    private void Die()
+    protected void Die()
     {
         //TODO: change image to desaturated version
     }
+
+
+    public abstract void StartTurn();
+    public abstract void EndTurn();
+
     #endregion
+
 
     #region Observer
     public IDisposable Subscribe(IObserver<Unit> observer)

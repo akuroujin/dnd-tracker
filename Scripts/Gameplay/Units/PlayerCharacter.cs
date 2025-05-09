@@ -27,6 +27,10 @@ public class PlayerCharacter : Unit
 
 
     #endregion
+    private bool isDowned => CurrentHealth <= 0;
+    private bool isStable = false;
+    private int DeathFailCount = 0;
+    private int DeathSuccessCount = 0;
 
     public override int GetProficiencyRoll(ProficiencyType proficiencyType)
     {
@@ -38,6 +42,45 @@ public class PlayerCharacter : Unit
             value += ProficiencyBonus;
         return value;
 
+    }
+    private void DeathThrow()
+    {
+        int roll = Dice.Roll(DiceType.D20);
+        switch (roll)
+        {
+            case 1:
+                DeathFailCount++;
+                break;
+            case 20:
+                Revive();
+                break;
+            case < 10:
+                DeathFailCount++;
+                break;
+            case > 10:
+                DeathSuccessCount++;
+                break;
+            default:
+                break;
+        }
+        if (DeathFailCount >= 3)
+            Die();
+        if (DeathSuccessCount >= 3)
+            Revive();
+    }
+    private void Revive()
+    {
+        CurrentHealth = 1;
+        DeathFailCount = 0;
+        DeathSuccessCount = 0;
+    }
+    protected override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+        if (isDowned)
+        {
+            DeathThrow();
+        }
     }
     public override int GetSaveRoll(StatType statType)
     {
