@@ -23,16 +23,22 @@ public class PlayerCharacter : Unit
 
     public List<SubClass> SubClasses { get; set; }
 
+    private int ProficiencyBonus => 2 + (Level - 1) / 4;
+
+
     #endregion
 
-    public PlayerCharacter(string name, int maxHealth, int currentHealth, int maxUbi, int currentUbi, int walkSpeed,
-        int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma,
-        int armorClass, int initiative, List<DamageType> resistances, List<Attack> attacks, List<Spell> spells) :
-        base(name, maxHealth, currentHealth, maxUbi, currentUbi, walkSpeed,
-        strength, dexterity, constitution, intelligence, wisdom, charisma,
-        armorClass, initiative, resistances, attacks, spells)
-    { }
+    public override int GetProficiencyRoll(ProficiencyType proficiencyType)
+    {
+        int roll = GetStatRoll((StatType)proficiencyType);
+        int value = roll;
+        if (Classes[0].Proficiencies.Contains(proficiencyType))
+            value += ProficiencyBonus;
+        if (Classes[0].Expertise.Contains(proficiencyType))
+            value += ProficiencyBonus;
+        return value;
 
+    }
     public override int GetSaveRoll(StatType statType)
     {
         return base.GetSaveRoll(statType);

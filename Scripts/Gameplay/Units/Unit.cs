@@ -24,35 +24,15 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     public int CurrentHealth { get; set; }
     public List<Element> appliedElements = new List<Element>();
     public Position Position { get; set; }
+    public bool IsDead => CurrentHealth <= 0;
 
     #endregion
 
-    public Unit(string name, int maxHealth, int currentHealth, int maxUbi, int currentUbi, int walkSpeed,
-        int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma,
-        int armorClass, int initiative, List<DamageType> resistances, List<Attack> attacks, List<Spell> spells)
-    {
-        Name = name;
-        MaxHealth = maxHealth;
-        CurrentHealth = currentHealth;
-        MaxUbi = maxUbi;
-        CurrentUbi = currentUbi;
-        WalkSpeed = walkSpeed;
-        Stats.Add(StatType.Strength, strength);
-        Stats.Add(StatType.Dexterity, dexterity);
-        Stats.Add(StatType.Constitution, constitution);
-        Stats.Add(StatType.Intelligence, intelligence);
-        Stats.Add(StatType.Wisdom, wisdom);
-        Stats.Add(StatType.Charisma, charisma);
-        ArmorClass = armorClass;
-        Initiative = initiative;
-        Resistances = resistances;
-        Attacks = attacks;
-        Spells = spells;
-    }
     #region Methods
+    public abstract int GetProficiencyRoll(ProficiencyType proficiencyType);
     public int GetStatRoll(StatType statType)
     {
-        return (Stats[statType] - 10) / 2;
+        return Dice.Roll(DiceType.D20) + (Stats[statType] - 10) / 2;
     }
     public virtual int GetSaveRoll(StatType statType)
     {

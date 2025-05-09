@@ -4,7 +4,15 @@ using System.Collections.Generic;
 
 public class Monster : Unit
 {
-    public Monster(string name, int maxHealth, int currentHealth, int maxUbi, int currentUbi, int walkSpeed, int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int armorClass, int initiative, List<DamageType> resistances, List<Attack> attacks, List<Spell> spells) : base(name, maxHealth, currentHealth, maxUbi, currentUbi, walkSpeed, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, initiative, resistances, attacks, spells)
+    public int ChallengeRating { get; set; }
+    public HashSet<ProficiencyType> Proficiencies { get; set; }
+    private int ProficiencyBonus => 2 + (ChallengeRating - 1) / 4;
+
+    public override int GetProficiencyRoll(ProficiencyType proficiencyType)
     {
+        int roll = GetStatRoll((StatType)proficiencyType);
+        if (!Proficiencies.Contains(proficiencyType))
+            return roll;
+        return roll + ProficiencyBonus;
     }
 }
