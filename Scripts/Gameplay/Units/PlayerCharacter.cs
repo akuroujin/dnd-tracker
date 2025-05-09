@@ -33,4 +33,8 @@ public class PlayerCharacter : Unit
         armorClass, initiative, resistances, attacks, spells)
     { }
 
+    public override int GetSaveRoll(StatType statType)
+    {
+        return base.GetSaveRoll(statType);
+    }
 }
