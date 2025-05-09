@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class Spell : Attack
 {
-    public Spell(string name, string description, int level, int castTime, int duration, List<Element> elements, int amount, int ubiCost) : base(name, description, new List<DamageRoll>(), 0, 0)
+    public Spell(string name, string description, int level, int castTime, int duration, List<Element> elements, int amount, int ubiCost) : base(name, description, new List<Damage>(), 0, 0)
     {
         Level = level;
         CastTime = castTime;
@@ -26,7 +26,7 @@ public class Spell : Attack
     public override int GetDamage()
     {
         int amount = 0;
-        foreach (DamageRoll roll in Damage)
+        foreach (Damage roll in damages)
         {
             amount += roll.GetDamage();
         }
