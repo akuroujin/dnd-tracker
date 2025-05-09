@@ -22,12 +22,15 @@ public class Dice
 
     public static int Roll(DiceType diceType, RollType rollType = RollType.Flat)
     {
-        if (rollType == RollType.Flat)
-            return Roll(diceType);
-        else if (rollType == RollType.Disadvantage)
-            return RollDisadvantage(diceType);
-        else
-            return RollAdvantage(diceType);
+        switch (rollType)
+        {
+            case RollType.Disadvantage:
+                return RollDisadvantage(diceType);
+            case RollType.Advantage:
+                return RollAdvantage(diceType);
+            default:
+                return Roll(diceType);
+        }
     }
     public static int Roll(DiceType diceType, int amount)
     {

@@ -6,11 +6,13 @@ public class Money
     public int electrum => silver / 5 % 2;
     public int gold => electrum / 2 % 10;
     public int platinum => gold / 10;
+
+    //Total
     public int TotalCopper => total;
-    public int TotalSilver => total / 10;
-    public int TotalElectrum => total / 5;
-    public int TotalGold => total / 2;
-    public int TotalPlatinum => total / 10;
+    public int TotalSilver => TotalCopper / 10;
+    public int TotalElectrum => TotalElectrum / 5;
+    public int TotalGold => TotalElectrum / 2;
+    public int TotalPlatinum => TotalGold / 10;
 
     public Money(int copper = 0, int silver = 0, int electrum = 0, int gold = 0, int platinum = 0)
     {
