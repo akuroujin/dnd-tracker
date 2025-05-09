@@ -22,6 +22,7 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     #region Combat
     public int Initiative { get; set; }
     public int CurrentHealth { get; set; }
+    public int TempHealth { get; set; }
     public List<Element> appliedElements = new List<Element>();
     public Position Position { get; set; }
     public bool IsDead => CurrentHealth <= 0;
