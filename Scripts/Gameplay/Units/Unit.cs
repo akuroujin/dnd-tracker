@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract class Unit : IObservable<Unit>, IObserver<Unit>
+public abstract class Unit : ITurnPhases
 {
     #region Properties
     public string Name { get; set; }
@@ -24,7 +24,10 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     public int Initiative { get; set; }
     public int CurrentHealth { get; set; }
     public int TempHealth { get; set; }
-    public List<Element> appliedElements = new List<Element>();
+    // Elements on this unit
+    public List<Element> takenElements = new List<Element>();
+    // Elements given to other units
+    public List<Element> givenElements = new List<Element>();
     public Position Position { get; set; }
 
 
@@ -32,6 +35,11 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
 
     #region Methods
     public abstract int GetProficiencyRoll(ProficiencyType proficiencyType);
+
+    public int GetPassiveProficiency(ProficiencyType proficiencyType)
+    {
+        return 10 + (Stats[(StatType)proficiencyType] - 10) / 2;
+    }
     public int GetStatRoll(StatType statType)
     {
         return Dice.Roll(DiceType.D20) + (Stats[statType] - 10) / 2;
@@ -46,6 +54,7 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
         if (CurrentHealth > MaxHealth)
             CurrentHealth = MaxHealth;
     }
+
     protected virtual void TakeDamage(int damage)
     {
         if (damage < 0)
@@ -66,7 +75,6 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
                 return;
         }
         CurrentHealth -= damage;
-
     }
 
     public void TakeOtherDamage(int damage, string reason)
@@ -76,10 +84,26 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
 
     public void TakeAttack(Attack attack, bool isCritical = false)
     {
-        CurrentHealth -= attack.GetDamage();
-        if (isCritical)
+        TakeDamage(attack.GetDamage());
+
+
+        if (!isCritical)
             return;
-        Dice.Roll(DiceType.D20, RollType.Disadvantage);
+        if (attack is Spell spell)
+        {
+            foreach (Element element in spell.Elements)
+            {
+                takenElements.Add(element);
+            }
+        }
+    }
+
+    public void ElementTick(Element element)
+    {
+        if (!takenElements.Contains(element))
+            return;
+        if (element.DurationLeft <= 0)
+            takenElements.Remove(element);
     }
 
     public void AttackEnemy(Unit enemy, Attack attack)
@@ -100,35 +124,21 @@ public abstract class Unit : IObservable<Unit>, IObserver<Unit>
     }
 
 
-    public abstract void StartTurn();
-    public abstract void EndTurn();
+    public void StartTurn()
+    {
+
+    }
+    public void EndTurn()
+    {
+
+    }
 
     #endregion
 
-
-    #region Observer
-    public IDisposable Subscribe(IObserver<Unit> observer)
+    #region File Management
+    void ExportToJSON()
     {
-        //TODO: add unit to observer, apply effects
-        throw new NotImplementedException();
-    }
-
-    public void OnCompleted()
-    {
-        //TODO: final application of effects and remove
-        throw new NotImplementedException();
-    }
-
-    public void OnError(Exception error)
-    {
-        GD.Print(error);
-        throw new NotImplementedException();
-    }
-
-    public void OnNext(Unit value)
-    {
-        //TODO: apply effect, remove duration
-        throw new NotImplementedException();
+        //TODO: export to json
     }
     #endregion
 }

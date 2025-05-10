@@ -28,7 +28,6 @@ public class PlayerCharacter : Unit
 
     #endregion
     private bool isDowned => CurrentHealth <= 0;
-    private bool isStable = false;
     private int DeathFailCount = 0;
     private int DeathSuccessCount = 0;
 

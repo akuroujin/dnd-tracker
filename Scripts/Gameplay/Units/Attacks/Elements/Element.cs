@@ -1,9 +1,20 @@
-public class Element
-{
-    public int Duration { get; set; }
-    public Damage damages { get; set; }
-    public int Stacks { get; set; }
-    public int MaxStacks { get; set; }
-    public Unit appliedBy { get; set; }
+using System;
+using System.Collections.Generic;
 
+public class Element : ITurnPhases
+{
+    public ElementType Type { get; set; }
+    public int CurrentStacks { get; set; }
+    public int DurationLeft { get; set; }
+    public Unit AppliedTo { get; set; }
+
+    public void EndTurn()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void StartTurn()
+    {
+        throw new NotImplementedException();
+    }
 }
