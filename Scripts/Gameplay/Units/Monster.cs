@@ -10,7 +10,7 @@ public class Monster : Unit
 
     public override int GetProficiencyRoll(ProficiencyType proficiencyType)
     {
-        int roll = GetStatRoll((StatType)proficiencyType);
+        int roll = GetStatRoll((BaseStatType)proficiencyType);
         if (!Proficiencies.Contains(proficiencyType))
             return roll;
         return roll + ProficiencyBonus;

@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class PlayerCharacter : Unit
+public class PlayerCharacter : Unit, IExportable
 {
     #region Properties
     public int Experience { get; set; }
@@ -23,17 +23,16 @@ public class PlayerCharacter : Unit
 
     public List<SubClass> SubClasses { get; set; }
 
-    private int ProficiencyBonus => 2 + (Level - 1) / 4;
-
+    public int ProficiencyBonus => 2 + (Level - 1) / 4;
 
     #endregion
-    private bool isDowned => CurrentHealth <= 0;
+    private bool isDowned => this[StatTypes.CurrentHealth] <= 0;
     private int DeathFailCount = 0;
     private int DeathSuccessCount = 0;
 
     public override int GetProficiencyRoll(ProficiencyType proficiencyType)
     {
-        int roll = GetStatRoll((StatType)proficiencyType);
+        int roll = GetStatRoll((BaseStatTypes)proficiencyType);
         int value = roll;
         if (Classes[0].Proficiencies.Contains(proficiencyType))
             value += ProficiencyBonus;
@@ -69,7 +68,7 @@ public class PlayerCharacter : Unit
     }
     private void Revive()
     {
-        CurrentHealth = 1;
+        this[StatTypes.CurrentHealth] = 1;
         DeathFailCount = 0;
         DeathSuccessCount = 0;
     }
@@ -81,8 +80,8 @@ public class PlayerCharacter : Unit
             DeathThrow();
         }
     }
-    public override int GetSaveRoll(StatType statType)
+    public override int GetSaveRoll(BaseStatTypes stat)
     {
-        return base.GetSaveRoll(statType);
+        return base.GetSaveRoll(stat);
     }
 }

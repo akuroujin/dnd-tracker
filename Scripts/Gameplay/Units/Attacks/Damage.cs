@@ -1,4 +1,4 @@
-public class Damage
+public class Damage : IDamage
 {
     public int DiceAmount { get; set; }
     public DiceType diceType { get; set; }

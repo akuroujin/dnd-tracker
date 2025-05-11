@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public class ElementType
+public class ElementType : IExportable
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -9,6 +9,5 @@ public class ElementType
     public Damage damages { get; set; }
     public int MaxStacks { get; set; }
     public string Ruleset { get; set; }
-
 
 }
