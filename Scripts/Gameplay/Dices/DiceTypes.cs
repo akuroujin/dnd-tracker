@@ -1,4 +1,4 @@
-public enum DiceType
+public enum DiceTypes
 {
     FLAT = 0,
     D4 = 4,

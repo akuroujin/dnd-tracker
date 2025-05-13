@@ -1,54 +1,106 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 public abstract class Unit : ITurnPhases, IExportable
 {
+
+    protected Unit(string name, List<Resistance> resistances, List<Attack> attacks, List<Spell> spells, List<Item> inventory, List<IEquippable> equipment, UnitBaseStats baseStats, UnitStats stats)
+    {
+        Name = name;
+        Resistances = resistances;
+        Attacks = attacks;
+        Spells = spells;
+        Inventory = inventory;
+        this.Equipment = equipment;
+        BaseStats = baseStats;
+        Stats = stats;
+    }
+
     #region Properties
-    public string Name { get; set; }
-    private string _name;
 
-    public Texture2D Icon { get; set; }
+    [XmlAttribute]
+    public string id
+    {
+        get
+        {
+            string value = Name.ToLower();
+            value = value.Trim();
+            value = value.Replace(' ', '_');
+            return value;
+        }
+    }
+    [XmlElement]
+    public string Name { get; private set; }
 
-    private List<DamageType> Resistances;
+    [XmlArray]
+    [XmlArrayItem("Resistance")]
+    private List<Resistance> Resistances;
 
-    private List<Attack> _attacks;
-    private Attack _currentAttack = null;
+    [XmlArray]
+    [XmlArrayItem("Attack")]
+    public List<Attack> Attacks { get; private set; }
 
-    private List<Spell> _spells;
 
-    private List<Item> Inventory;
-    private List<IEquippable> equipment;
+    [XmlArray]
+    [XmlArrayItem("Spell")]
+    public List<Spell> Spells { get; private set; }
 
-    private int[] _baseStats = new int[Enum.GetNames(typeof(BaseStatTypes)).Length];
+    [XmlArray]
+    [XmlArrayItem("Item")]
+    public List<Item> Inventory { get; private set; }
 
+    [XmlArray("Equipments")]
+    [XmlArrayItem("Equipment")]
+    public List<IEquippable> Equipment { get; private set; }
+
+
+    private UnitBaseStats _baseStats;
+    [XmlArray("BaseStats")]
+    [XmlArrayItem("BaseStat")]
+    public UnitBaseStats BaseStats
+    {
+        get => _baseStats;
+        private set => _baseStats = value;
+    }
+    [XmlIgnore]
     public int this[BaseStatTypes stat]
     {
-        get => _baseStats[(int)stat];
-        protected set => _baseStats[(int)stat] = value;
+        get => _baseStats[stat];
+        protected set => _baseStats[stat] = value;
     }
 
-    private int[] _stats = new int[Enum.GetNames(typeof(StatTypes)).Length];
+    private UnitStats _stats;
+    [XmlArray("Stats")]
+    [XmlArrayItem("Stat")]
+    public UnitStats Stats
+    {
+        get => _stats;
+        private set => _stats = value;
+    }
+    [XmlIgnore]
     public int this[StatTypes stat]
     {
-        get => _stats[(int)stat];
-        protected set => _stats[(int)stat] = value;
+        get => _stats[stat];
+        protected set => _stats[stat] = value;
     }
 
-    bool didAction;
-    bool didBonusAction;
+    bool _didAction = false;
+    bool _didBonusAction = false;
+    Spell _currentAttack = null;
 
     #endregion
 
     #region Combat
 
     // Elements on this unit
+    [XmlIgnore]
     public List<Element> takenElements = new List<Element>();
 
     // Effect given to other units
+    [XmlIgnore]
     public List<IEffect> givenEffects = new List<IEffect>();
-    public Position Position { get; set; }
-
 
     #endregion
 
@@ -61,13 +113,13 @@ public abstract class Unit : ITurnPhases, IExportable
     }
     public int GetStatRoll(BaseStatTypes stat)
     {
-        return Dice.Roll(DiceType.D20) + (this[stat] - 10) / 2;
+        return Dice.Roll(DiceTypes.D20) + (this[stat] - 10) / 2;
     }
     public virtual int GetSaveRoll(BaseStatTypes stat)
     {
-        return Dice.Roll(DiceType.D20) + this[stat] - 10;
+        return Dice.Roll(DiceTypes.D20) + this[stat] - 10;
     }
-    private void Heal(int heal)
+    protected virtual void Heal(int heal)
     {
         this[StatTypes.CurrentHealth] += heal;
         if (this[StatTypes.CurrentHealth] > this[StatTypes.MaxHealth])
@@ -81,7 +133,7 @@ public abstract class Unit : ITurnPhases, IExportable
             Heal(damage);
             return;
         }
-        if (damage > _stats[(int)StatTypes.CurrentHealth])
+        if (damage > _stats[StatTypes.CurrentHealth])
         {
             Die();
             return;
@@ -120,7 +172,7 @@ public abstract class Unit : ITurnPhases, IExportable
 
     public void AttackEnemy(Unit enemy, Attack attack)
     {
-        int roll = Dice.Roll(DiceType.D20);
+        int roll = Dice.Roll(DiceTypes.D20);
         int statroll = roll + GetStatRoll(attack.statType);
         if (statroll < enemy[StatTypes.Armorclass])
         {
@@ -143,8 +195,8 @@ public abstract class Unit : ITurnPhases, IExportable
         {
             effect.Tick();
         }
-        didAction = false;
-        didBonusAction = false;
+        _didAction = false;
+        _didBonusAction = false;
     }
 
     public void EndTurn()
@@ -161,8 +213,6 @@ public abstract class Unit : ITurnPhases, IExportable
     }
 
 
-
-    public abstract void Export(string filePath, List<IExportable> exportables = null);
 
     public abstract IExportable Import(string filePath);
 

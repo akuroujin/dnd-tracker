@@ -20,7 +20,7 @@ public class ElementsSingleton
     }
 
     private ElementsSingleton() { }
-    public void Addelement(ElementType element)
+    public void AddElement(ElementType element)
     {
         elements.Add(element);
     }
